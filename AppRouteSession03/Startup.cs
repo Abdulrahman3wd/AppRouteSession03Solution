@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AppRouteSession03.BLL.Repostories;
+using AppRouteSession03.BLL.Interfaces;
 namespace AppRouteSession03
 {
     public class Startup
@@ -42,7 +44,7 @@ namespace AppRouteSession03
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 
 
