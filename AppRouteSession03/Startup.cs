@@ -66,7 +66,6 @@ namespace AppRouteSession03
 
             app.UseRouting();
 
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
