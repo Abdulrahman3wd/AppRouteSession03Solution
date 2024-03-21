@@ -18,8 +18,8 @@ namespace AppRouteSession03.PL.Controllers
         // / Department/Index
         public IActionResult Index()
         {
-            //  var departments = _departmentRepo.GetAll();
-            return View();
+            var departments = _departmentRepo.GetAll();
+            return View(departments);
         }
     }
 }
