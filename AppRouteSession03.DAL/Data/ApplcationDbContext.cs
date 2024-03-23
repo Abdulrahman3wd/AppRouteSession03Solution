@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.Models;
+using AppRouteSession03.DAL.Models;
 
 namespace AppRouteSession03.PL
 {
@@ -23,6 +24,7 @@ namespace AppRouteSession03.PL
 
         }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 
 }
