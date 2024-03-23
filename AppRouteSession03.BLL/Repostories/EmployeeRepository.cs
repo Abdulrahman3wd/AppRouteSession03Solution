@@ -17,6 +17,7 @@ namespace AppRouteSession03.BLL.Repostories
 
         public EmployeeRepository(ApplecationDbContext dbContext):base(dbContext) // Ask CLR for Creating object From DbContext
         {
+            dbContext = _dbContext;
           
         }
 

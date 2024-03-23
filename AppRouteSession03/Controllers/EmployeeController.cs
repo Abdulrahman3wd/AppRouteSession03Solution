@@ -22,7 +22,7 @@ namespace AppRouteSession03.PL.Controllers
 
 
 
-
+        [HttpGet]
         public IActionResult Index()
         {
             var employee = _employeeRepository.GetAll();
