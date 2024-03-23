@@ -9,45 +9,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 namespace AppRouteSession03.BLL.Repostories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : GenericRepository<Department> , IDepartmentRepository
     {
-        private readonly ApplecationDbContext _dbContext; // Null
-
-        public DepartmentRepository(ApplecationDbContext dbContext) // Ask CLR for Creating Object from "AppDbContext"
+        public DepartmentRepository(ApplecationDbContext dbContext):base(dbContext)
         {
-            _dbContext = dbContext;
+            
         }
-
-
-
-        public int Add(Department entity)
-        {
-            _dbContext.Departments.Add(entity);
-             return  _dbContext.SaveChanges();
-        }
-        public int Update(Department entity)
-        {
-            _dbContext.Departments.Update(entity);
-            return _dbContext.SaveChanges();
-
-        }
-
-        public int Delete(Department entity)
-        {
-            _dbContext.Departments.Remove(entity);
-            return _dbContext.SaveChanges();
-
-        }
-
-        public Department Get(int id)
-        {
-            //var department = _dbContext.Departments.Local .Where(D=>D.Id == id).FirstOrDefault();
-            //return department;
-            return _dbContext.Find<Department>(id); // EF Core 3.1 Feature
-        }
-
-        public IEnumerable<Department> GetAll()       
-            => _dbContext.Departments.AsNoTracking().ToList();
 
     }
 }

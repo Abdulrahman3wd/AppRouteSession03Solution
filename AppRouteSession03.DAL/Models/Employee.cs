@@ -22,9 +22,9 @@ namespace AppRouteSession03.DAL.Models
         
         PartTime = 2
     }
-    public class Employee
+    public class Employee : ModelBase
     {
-        public int Id { get; set; }
+       
         [Required (ErrorMessage = "Name Is Required")]
         [MaxLength(50,ErrorMessage = "MaxLength Of Name is 50 Chars")]
         [MinLength (5,ErrorMessage = "MinLength of Name is 5 Chars")]

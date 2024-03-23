@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace AppRouteSession03.BLL.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        IEnumerable<Employee> GetAll();
-        Employee Get(int id);
-        int Add(Employee Employee);
+        IQueryable<Employee> GetEmployeesByAdress(string address); 
 
-        int Update(Employee Employee);
-
-        int Delete(Employee entity);
     }
 }

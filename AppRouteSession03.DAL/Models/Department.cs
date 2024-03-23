@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppRouteSession03.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace App.DAL.Models
 {
-    public class Department
+    public class Department : ModelBase
     {
-        public int Id { get; set; }
+       
+
         [Required(ErrorMessage = "Code Is Required !!")]
         public string Code { get; set; }
         [Required(ErrorMessage = "Name Is Required !!")]

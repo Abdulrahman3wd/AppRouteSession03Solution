@@ -11,38 +11,21 @@ using System.Threading.Tasks;
 
 namespace AppRouteSession03.BLL.Repostories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee> , IEmployeeRepository
     {
-        private readonly ApplecationDbContext _dbContext;
-        public EmployeeRepository(ApplecationDbContext dbContext)
+       
+
+        public EmployeeRepository(ApplecationDbContext dbContext):base(dbContext) // Ask CLR for Creating object From DbContext
         {
-            _dbContext = dbContext;
-            
-        }
-        public int Add(Employee entity)
-        {
-            _dbContext.Employees.Add(entity);
-            return _dbContext.SaveChanges();
+          
         }
 
-        public int Delete(Employee entity)
+
+        public IQueryable<Employee> GetEmployeesByAdress(string address)
         {
-            _dbContext.Employees.Remove(entity);
-            return _dbContext.SaveChanges();
+            return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
         }
 
-        public Employee Get(int id)
-        {
-            return _dbContext.Find<Employee>(id);
-        }
 
-        public IEnumerable<Employee> GetAll()
-            => _dbContext.Employees.AsNoTracking().ToList();
-
-        public int Update(Employee entity)
-        {
-            _dbContext.Employees.Update(entity);
-            return _dbContext.SaveChanges();
-        }
     }
 }
