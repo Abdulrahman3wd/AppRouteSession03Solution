@@ -84,7 +84,7 @@ namespace AppRouteSession03.DAL.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(12.2)");
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<int>("empType")
                         .HasColumnType("int");

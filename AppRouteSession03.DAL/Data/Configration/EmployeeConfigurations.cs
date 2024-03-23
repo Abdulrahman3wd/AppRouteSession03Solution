@@ -17,7 +17,7 @@ namespace AppRouteSession03.DAL.Data.Configration
 
             builder.Property(E=>E.Name).HasColumnType("varchar").HasMaxLength(50).IsRequired();
             builder.Property(E => E.Address).IsRequired();
-            builder.Property(E => E.Salary).HasColumnType("decimal(12.2)");
+            builder.Property(E => E.Salary).HasColumnType("decimal(12,2)");
             builder.Property(E => E.gender)
                 .HasConversion(
                 (Gender) => Gender.ToString(),

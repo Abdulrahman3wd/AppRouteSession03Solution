@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppRouteSession03.DAL.Data.Migrations
 {
     [DbContext(typeof(ApplecationDbContext))]
-    [Migration("20240323181728_EmployeeModule")]
+    [Migration("20240323182641_EmployeeModule")]
     partial class EmployeeModule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,7 +86,7 @@ namespace AppRouteSession03.DAL.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(12.2)");
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<int>("empType")
                         .HasColumnType("int");

@@ -16,7 +16,7 @@ namespace AppRouteSession03.DAL.Data.Migrations
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Age = table.Column<int>(type: "int", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Salary = table.Column<decimal>(type: "decimal(12.2)", nullable: false),
+                    Salary = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
