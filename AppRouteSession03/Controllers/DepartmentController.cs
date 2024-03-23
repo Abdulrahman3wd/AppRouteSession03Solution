@@ -127,7 +127,7 @@ namespace AppRouteSession03.PL.Controllers
                 if (_env.IsDevelopment())
                     ModelState.AddModelError(string.Empty, ex.Message);
                 else
-                    ModelState.AddModelError(string.Empty, "An Error Has Occured During Updating The Department");
+                    ModelState.AddModelError(string.Empty, "An Error Has Occured During Deleting The Department");
 
                 return View(department);
             }
