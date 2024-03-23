@@ -109,5 +109,38 @@ namespace AppRouteSession03.PL.Controllers
             }
 
         }
+
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            try
+            {
+                _departmentRepo.Delete(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                // 1. Log Exepction
+                // 2. Frirndly Message 
+
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                else
+                    ModelState.AddModelError(string.Empty, "An Error Has Occured During Updating The Department");
+
+                return View(department);
+            }
+
+
+        }
+
+        [HttpGet]
+
+        public IActionResult Delete(int? id) 
+        {
+            return Details(id);
+
+        }
     }
 }
