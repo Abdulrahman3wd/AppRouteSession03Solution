@@ -43,5 +43,17 @@ namespace AppRouteSession03.PL.Controllers
             }
             return View(department);
         }
+
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+                return BadRequest();  //400       
+            
+            var department = _departmentRepo.Get(id.Value);
+            if ( department is null)
+                return NotFound(); //404
+            
+            return View(department);
+        }
     }
 }
