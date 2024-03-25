@@ -50,7 +50,14 @@ namespace AppRouteSession03.BLL.Repostories
         }
 
         public IEnumerable<T> GetAll()
-            => _dbContext.Set<T>().AsNoTracking().ToList();
+        {
+            if (typeof(T) == typeof(Employee))
+                return (IEnumerable<T>) _dbContext.Employees.Include(E=>E.Department).AsNoTracking().ToList();
+            else 
+                return _dbContext.Set<T>().AsNoTracking().ToList();
+
+        }
+          
 
     }
 }

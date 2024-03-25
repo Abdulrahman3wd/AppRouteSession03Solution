@@ -12,11 +12,13 @@ namespace AppRouteSession03.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
+        //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env  /*IDepartmentRepository departmentRepository*/)
         {
             _employeeRepository = employeeRepository;
             _env = env;
+            //_departmentRepository = departmentRepository;
         }
 
 
@@ -44,9 +46,11 @@ namespace AppRouteSession03.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Employee employee)
         {
             if (ModelState.IsValid)
@@ -85,7 +89,7 @@ namespace AppRouteSession03.PL.Controllers
 
         public IActionResult Edit(int? id)
         {
-
+        
             return Details(id, "Edit");
         }
 

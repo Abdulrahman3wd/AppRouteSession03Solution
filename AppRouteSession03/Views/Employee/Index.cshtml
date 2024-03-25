@@ -32,10 +32,12 @@
             <tr> 
                 <th>@Html.DisplayNameFor(E=>E.Name)</th>
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
-                <th>@Html.DisplayNameFor(E => E.Age)</th>
+                <th>@Html.DisplayNameFor(E => E.Address)</th>
+                <th>@Html.DisplayNameFor(E => E.Department)</th>
                 <th>@Html.DisplayNameFor(E => E.Salary)</th>
                 <th>@Html.DisplayNameFor(E => E.gender)</th>
                 <th>@Html.DisplayNameFor(E => E.Phone)</th>
+                
 
             </tr>
 
@@ -46,11 +48,13 @@
             {
                 <tr>
                     <td>@employee.Name</td>
-                    <td>@employee.Email</td>
-                    <td>@employee.Age</td>
-                    <td>@employee.Salary</td>
+                    <td>@Html.DisplayFor(M=> employee.Email)</td>
+                    <td>@employee.Address</td>
+                    <td>@employee.Department?.Name</td>
+                    <td>@Html.DisplayFor(M=>employee.Salary)</td>
                     <td>@employee.gender</td>
                     <td>@employee.Phone</td>
+                   
                     <partial name="_ButtonsPartial" model="@employee.Id"/>
                  
 

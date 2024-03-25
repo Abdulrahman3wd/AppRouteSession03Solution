@@ -59,8 +59,8 @@ namespace AppRouteSession03.DAL.Models
         public int? DepartmentId { get; set; } // ForignKey Column
 
         
-        // Navigational Property [One] 
-        public Department Department { get; set; }
+        // Navigational Property [One] [Related Data]
+        public virtual Department Department { get; set; }
 
 
 
