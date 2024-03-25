@@ -25,6 +25,18 @@ namespace AppRouteSession03.PL.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            // Binding Through View`s Dictionary :  Transfer Data from Action to view
+
+            // 1. View Data is a Dictionary Type Property (introduced in ASP.NET Framework 3.5)
+            //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
+            //
+            ViewData["Message"] = "Hello View Data";
+
+            // 2. View Bag is a dynamic Type Property (introduced in ASP.NET Framework 4.0) based on dynamic Keyword
+            //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
+            ViewBag.Message = "Hello View Bag";
+
+
             var employee = _employeeRepository.GetAll();
             return View(employee);
         }

@@ -1,7 +1,15 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "Index";
+    string ViewDataMessage = ViewData["Message"] as string; // Enforce Type Safty -> Requires Type Conversion => [Strong Typed ] 
+    string ViewBagMessage = ViewBag.Message; // Compiler Can`t Enforce Type Safty ->  Not Require  Type Conversion [Weekly Type Conversion]
 }
+
+<div class="alert alert-warning">
+  @*   @ViewData["Message"] *@
+  @ViewBag.Message 
+  
+</div>
 
 <h1>All Employees </h1>
 
