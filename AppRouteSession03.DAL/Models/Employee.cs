@@ -1,6 +1,8 @@
-﻿using System;
+﻿using App.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -24,14 +26,15 @@ namespace AppRouteSession03.DAL.Models
     }
     public class Employee : ModelBase
     {
-       
-        [Required (ErrorMessage = "Name Is Required")]
-        [MaxLength(50,ErrorMessage = "MaxLength Of Name is 50 Chars")]
-        [MinLength (5,ErrorMessage = "MinLength of Name is 5 Chars")]
+
+        #region Data
+        [Required(ErrorMessage = "Name Is Required")]
+        [MaxLength(50, ErrorMessage = "MaxLength Of Name is 50 Chars")]
+        [MinLength(5, ErrorMessage = "MinLength of Name is 5 Chars")]
         public string Name { get; set; }
-        [Range(22,30)]
+        [Range(22, 30)]
         public int? Age { get; set; }
-        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$" ,
+        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",
             ErrorMessage = "Address Must be Like 123-street-City-Country")]
         public string Address { get; set; }
 
@@ -40,7 +43,7 @@ namespace AppRouteSession03.DAL.Models
         [Display(Name = "Is Active")]
         public bool IsActive { get; set; }
         [EmailAddress]
-        public string Email{ get; set; }
+        public string Email { get; set; }
 
         [Display(Name = "Phone Number")]
         [Phone]
@@ -51,6 +54,13 @@ namespace AppRouteSession03.DAL.Models
         public EmpType empType { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public bool IsDeleted { get; set; } = false;
+        #endregion
+
+        public int? DepartmentId { get; set; } // ForignKey Column
+
+        
+        // Navigational Property [One] 
+        public Department Department { get; set; }
 
 
 
