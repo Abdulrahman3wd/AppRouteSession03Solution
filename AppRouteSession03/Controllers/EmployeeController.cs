@@ -13,7 +13,7 @@ namespace AppRouteSession03.PL.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
 
-        public EmployeeController(IEmployeeRepository employeeRepository , IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env)
         {
             _employeeRepository = employeeRepository;
             _env = env;
@@ -31,7 +31,7 @@ namespace AppRouteSession03.PL.Controllers
             //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
             //
             ViewData["Message"] = "Hello View Data";
-
+            TempData.Keep();
             // 2. View Bag is a dynamic Type Property (introduced in ASP.NET Framework 4.0) based on dynamic Keyword
             //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
             ViewBag.Message = "Hello View Bag";
@@ -42,19 +42,29 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Employee employee) 
+        public IActionResult Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
                 var Count = _employeeRepository.Add(employee);
-                    if (Count > 0)
-                        return RedirectToAction(nameof(Index));
-                
+
+                // 3. TempData is Dictinory Type Property (Introduced in ASP.NET Framework 3.5)
+                //           => is used to pass data between two consecutive Requestes
+
+                if (Count > 0)
+                    TempData["Message"] = "Employee is Created Successfuly";
+
+                else
+                    TempData["Message"] = "An Error !! Has Occured, Employee Not Craeted ";
+
+                return RedirectToAction(nameof(Index));
+
+
             }
             return View(employee);
 
@@ -81,7 +91,7 @@ namespace AppRouteSession03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id , Employee employee )
+        public IActionResult Edit([FromRoute] int id, Employee employee)
         {
             if (id != employee.Id)
             {
@@ -93,7 +103,7 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 _employeeRepository.Update(employee);
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
 
 
             }
@@ -112,7 +122,7 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Employee employee) 
+        public IActionResult Delete(Employee employee)
         {
             try
             {

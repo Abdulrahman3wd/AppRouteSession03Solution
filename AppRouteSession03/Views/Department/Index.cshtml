@@ -6,6 +6,15 @@
    
 
 }
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="alert alert-success fade-in-out">
+        @TempData["Message"]
+
+
+    </div>
+}
+
 
 <h1>All Departments</h1>
 <br/>

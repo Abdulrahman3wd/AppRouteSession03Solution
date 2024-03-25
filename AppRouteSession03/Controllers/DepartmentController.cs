@@ -44,8 +44,13 @@ namespace AppRouteSession03.PL.Controllers
               var Count =  _departmentRepo.Add(department);
                 if (Count > 0)
                 {
-                    return RedirectToAction(nameof(Index));
+                    TempData["Message"] = "Department is Created Successfuly";
                 }
+                else
+                {
+                    TempData["Message"] = "An Error !! Has Occured, Department Not Craeted ";
+                }
+                return RedirectToAction(nameof(Index));
             }
             return View(department);
         }
