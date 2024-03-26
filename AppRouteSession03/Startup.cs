@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.PL.Extentions;
+using AppRouteSession03.PL.Helpers;
 namespace AppRouteSession03
 {
     public class Startup
@@ -46,6 +47,7 @@ namespace AppRouteSession03
             } , ServiceLifetime.Scoped);
 
             services.AppApplicationServices(); // Extention Method
+            services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
 
         }
 

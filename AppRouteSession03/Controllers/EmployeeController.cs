@@ -1,22 +1,27 @@
 ﻿using App.DAL.Models;
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.DAL.Models;
+using AppRouteSession03.PL.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AppRouteSession03.PL.Controllers
 {
     public class EmployeeController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
         //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env  /*IDepartmentRepository departmentRepository*/)
+        public EmployeeController(IMapper mapper, IEmployeeRepository employeeRepository, IWebHostEnvironment env  /*IDepartmentRepository departmentRepository*/)
         {
+            _mapper = mapper;
             _employeeRepository = employeeRepository;
             _env = env;
             //_departmentRepository = departmentRepository;
@@ -47,9 +52,9 @@ namespace AppRouteSession03.PL.Controllers
          
             else
                 employees = _employeeRepository.SearchEmployeesByname(searchInp.ToLower());
-               
-            
-            return View(employees);
+            var MappedEpm = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            return View(MappedEpm);
 
         }
 
@@ -61,11 +66,12 @@ namespace AppRouteSession03.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVm)
         {
             if (ModelState.IsValid)
             {
-                var Count = _employeeRepository.Add(employee);
+                var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+                var Count = _employeeRepository.Add(MappedEmp);
 
                 // 3. TempData is Dictinory Type Property (Introduced in ASP.NET Framework 3.5)
                 //           => is used to pass data between two consecutive Requestes
@@ -80,7 +86,7 @@ namespace AppRouteSession03.PL.Controllers
 
 
             }
-            return View(employee);
+            return View(employeeVm);
 
         }
 
@@ -91,10 +97,11 @@ namespace AppRouteSession03.PL.Controllers
                 return BadRequest();  //400       
 
             var employee = _employeeRepository.Get(id.Value);
+            var MappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
             if (employee is null)
                 return NotFound(); //404
 
-            return View(viewName, employee);
+            return View(viewName, MappedEmp);
         }
 
         public IActionResult Edit(int? id)
@@ -105,18 +112,19 @@ namespace AppRouteSession03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVm)
         {
-            if (id != employee.Id)
+            if (id != employeeVm.Id)
             {
                 return BadRequest("An Error :(");
 
             }
             if (!ModelState.IsValid)
-                return View(employee);
+                return View(employeeVm);
             try
             {
-                _employeeRepository.Update(employee);
+                var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+                _employeeRepository.Update(MappedEmp);
                 return RedirectToAction(nameof(Index));
 
 
@@ -128,7 +136,7 @@ namespace AppRouteSession03.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occured During Updating The Employee");
 
-                return View(employee);
+                return View(employeeVm);
             }
 
 
@@ -136,11 +144,12 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Employee employee)
+        public IActionResult Delete(EmployeeViewModel employeeVm)
         {
             try
             {
-                _employeeRepository.Delete(employee);
+                var MappedDept = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
+                _employeeRepository.Delete(MappedDept);
                 return RedirectToAction(nameof(Index));
 
 
@@ -152,7 +161,7 @@ namespace AppRouteSession03.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occured During Deleting The Employee");
 
-                return View(employee);
+                return View(employeeVm);
             }
         }
 

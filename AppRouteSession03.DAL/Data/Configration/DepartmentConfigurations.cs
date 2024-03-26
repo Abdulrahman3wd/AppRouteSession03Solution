@@ -16,8 +16,8 @@ namespace App.DAL.Data.Configration
         {
             // fluent APIs for Department Domain 
             builder.Property(D => D.Id).UseIdentityColumn(10, 10);
-            builder.Property(D => D.Code).HasColumnType("varchar").HasMaxLength(50).IsRequired();
-            builder.Property(D => D.Name).HasColumnType("varchar").HasMaxLength(50).IsRequired();
+            builder.Property(D => D.Code).HasColumnType("varchar").HasMaxLength(50).IsRequired(true);
+            builder.Property(D => D.Name).HasColumnType("varchar").HasMaxLength(50).IsRequired(true);
 
 
             builder.HasMany(D => D.Employees)

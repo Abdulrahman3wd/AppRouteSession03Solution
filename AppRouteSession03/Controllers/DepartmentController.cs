@@ -2,24 +2,31 @@
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.DAL.Models;
+using AppRouteSession03.PL.ViewModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AppRouteSession03.PL.Controllers
 {
     public class DepartmentController : Controller
     {
+        private readonly IMapper _mapper;
+
         // Inheritance : DepartmentController is a Controller 
         // Composition : DepartmentController has a Department Repository  
 
         private readonly IDepartmentRepository _departmentRepo; // Null
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepository departmentRepository , IWebHostEnvironment env) // Ask CLR for Creating an object from Class Implementing IDepartmentRepository
+        public DepartmentController(IMapper mapper, IDepartmentRepository departmentRepository , IWebHostEnvironment env) // Ask CLR for Creating an object from Class Implementing IDepartmentRepository
         {
+            _mapper = mapper;
             _departmentRepo = departmentRepository;
             _env = env;
         }
@@ -28,8 +35,9 @@ namespace AppRouteSession03.PL.Controllers
         public IActionResult Index(string searchInp)
         {
 
-            var departments =Enumerable.Empty<Department>();
 
+            var departments =Enumerable.Empty<Department>();
+        
 
             if (string.IsNullOrEmpty(searchInp))
                 departments = _departmentRepo.GetAll();
@@ -37,9 +45,9 @@ namespace AppRouteSession03.PL.Controllers
 
             else
                 departments = _departmentRepo.SearchDepartmentByname(searchInp.ToLower());
+            var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
 
-
-            return View(departments);
+            return View(MappedDept);
 
 
         }
@@ -52,11 +60,21 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public IActionResult Create(DepartmentViewModel departmentVm)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-              var Count =  _departmentRepo.Add(department);
+                //1. Manual mapping
+                /// var MappedDept = new Department
+                /// {
+                ///     Name = departmentVm.Name,
+                ///     Code = departmentVm.Code,
+                ///     DateOFCreation = departmentVm.DateOFCreation,
+                ///  };
+
+                //2. Auto Mapper
+                var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
+              var Count =  _departmentRepo.Add(MappedDept);
                 if (Count > 0)
                 {
                     TempData["Message"] = "Department is Created Successfuly";
@@ -67,7 +85,7 @@ namespace AppRouteSession03.PL.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            return View(departmentVm);
         }
 
         public IActionResult Details(int? id, string viewName ="Details")
@@ -76,10 +94,11 @@ namespace AppRouteSession03.PL.Controllers
                 return BadRequest();  //400       
             
             var department = _departmentRepo.Get(id.Value);
+            var MappedDept = _mapper.Map<Department, DepartmentViewModel>(department);
             if ( department is null)
                 return NotFound(); //404
             
-            return View(viewName ,department);
+            return View(viewName , MappedDept);
         }
 
         // /Department/Edit/10
@@ -97,19 +116,20 @@ namespace AppRouteSession03.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Edit([FromRoute] int id , Department department)
+        public IActionResult Edit([FromRoute] int id , DepartmentViewModel departmentVm)
         {
-            if (id != department.Id)
+            if (id != departmentVm.Id)
             {
                 return BadRequest("An Error :(");
                 
             }
             if (!ModelState.IsValid)            
-                return View(department);
+                return View(departmentVm);
             
             try
             {
-                _departmentRepo.Update(department);
+                var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
+                _departmentRepo.Update(MappedDept);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -124,18 +144,19 @@ namespace AppRouteSession03.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occured During Updating The Department");
 
-                return View(department);
+                return View(departmentVm);
 
             }
 
         }
 
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public IActionResult Delete(DepartmentViewModel departmentVm)
         {
             try
             {
-                _departmentRepo.Delete(department);
+                var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
+                _departmentRepo.Delete(MappedDept);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -149,7 +170,7 @@ namespace AppRouteSession03.PL.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "An Error Has Occured During Deleting The Department");
 
-                return View(department);
+                return View(departmentVm);
             }
 
 

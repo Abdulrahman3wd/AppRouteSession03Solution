@@ -13,11 +13,11 @@ namespace App.DAL.Models
     {
        
 
-        [Required(ErrorMessage = "Code Is Required !!")]
+        [Required]
         public string Code { get; set; }
-        [Required(ErrorMessage = "Name Is Required !!")]
+        [Required]
         public string Name { get; set; }
-        [Display (Name = "Date Of Creation")]
+       
         public DateTime DateOFCreation { get; set; } = DateTime.Now;
 
 

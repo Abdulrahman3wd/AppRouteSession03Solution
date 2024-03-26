@@ -24,6 +24,7 @@ namespace AppRouteSession03.DAL.Data.Configration
                 (GenderAsString) => (Gender)Enum.Parse(typeof(Gender), GenderAsString, true)
 
                 );
+            builder.Property(E => E.Name).IsRequired(true).HasMaxLength(50);
 
         }
     }
