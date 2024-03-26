@@ -10,7 +10,8 @@ namespace AppRouteSession03.BLL.Interfaces
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-        IQueryable<Employee> GetEmployeesByAdress(string address); 
+        IQueryable<Employee> GetEmployeesByAdress(string address);
+        IQueryable<Employee> SearchEmployeesByname(string name);
 
     }
 }

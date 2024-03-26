@@ -16,5 +16,6 @@ namespace AppRouteSession03.BLL.Interfaces
         int Update(T Employee);
 
         int Delete(T entity);
+
     }
 }

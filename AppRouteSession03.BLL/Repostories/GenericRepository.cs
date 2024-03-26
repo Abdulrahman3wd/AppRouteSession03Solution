@@ -13,7 +13,7 @@ namespace AppRouteSession03.BLL.Repostories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : ModelBase
     {
-        private protected  readonly ApplecationDbContext _dbContext; // Null
+        private protected readonly ApplecationDbContext _dbContext; // Null
 
         public GenericRepository(ApplecationDbContext dbContext) // Ask CLR for Creating Object from "AppDbContext"
         {
@@ -52,12 +52,11 @@ namespace AppRouteSession03.BLL.Repostories
         public IEnumerable<T> GetAll()
         {
             if (typeof(T) == typeof(Employee))
-                return (IEnumerable<T>) _dbContext.Employees.Include(E=>E.Department).AsNoTracking().ToList();
-            else 
+                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            else
                 return _dbContext.Set<T>().AsNoTracking().ToList();
 
-        }
-          
 
+        }
     }
 }

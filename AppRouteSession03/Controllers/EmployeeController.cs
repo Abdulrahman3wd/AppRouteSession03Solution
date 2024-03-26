@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace AppRouteSession03.PL.Controllers
 {
@@ -25,22 +26,31 @@ namespace AppRouteSession03.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string searchInp)
         {
-            // Binding Through View`s Dictionary :  Transfer Data from Action to view
-
-            // 1. View Data is a Dictionary Type Property (introduced in ASP.NET Framework 3.5)
-            //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
-            //
-            ViewData["Message"] = "Hello View Data";
+            /// Binding Through View`s Dictionary :  Transfer Data from Action to view
+            ///
+            /// 1. View Data is a Dictionary Type Property (introduced in ASP.NET Framework 3.5)
+            ///     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
+            ///
+            ///ViewData["Message"] = "Hello View Data";
             TempData.Keep();
-            // 2. View Bag is a dynamic Type Property (introduced in ASP.NET Framework 4.0) based on dynamic Keyword
-            //     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
-            ViewBag.Message = "Hello View Bag";
+            /// 2. View Bag is a dynamic Type Property (introduced in ASP.NET Framework 4.0) based on dynamic Keyword
+            ///     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
+            ///ViewBag.Message = "Hello View Bag";
+            var employees =Enumerable.Empty<Employee>();
 
 
-            var employee = _employeeRepository.GetAll();
-            return View(employee);
+            if (string.IsNullOrEmpty(searchInp))
+                employees = _employeeRepository.GetAll();
+               
+         
+            else
+                employees = _employeeRepository.SearchEmployeesByname(searchInp.ToLower());
+               
+            
+            return View(employees);
+
         }
 
         [HttpGet]

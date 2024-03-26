@@ -1,10 +1,12 @@
 ﻿using App.DAL.Models;
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.BLL.Repostories;
+using AppRouteSession03.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 
 namespace AppRouteSession03.PL.Controllers
 {
@@ -23,10 +25,23 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         // / Department/Index
-        public IActionResult Index()
+        public IActionResult Index(string searchInp)
         {
-            var departments = _departmentRepo.GetAll();
+
+            var departments =Enumerable.Empty<Department>();
+
+
+            if (string.IsNullOrEmpty(searchInp))
+                departments = _departmentRepo.GetAll();
+
+
+            else
+                departments = _departmentRepo.SearchDepartmentByname(searchInp.ToLower());
+
+
             return View(departments);
+
+
         }
 
         // Get
