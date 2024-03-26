@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.BLL.Interfaces;
+using AppRouteSession03.PL.Extentions;
 namespace AppRouteSession03
 {
     public class Startup
@@ -30,24 +31,21 @@ namespace AppRouteSession03
 
 
 
-            //services.AddControllers();// API
-            //services.AddRazorPages();// RazorPages
-            //services.AddMvc();// MVC            
+            ///services.AddControllers();// API
+            ///services.AddRazorPages();// RazorPages
+            ///services.AddMvc();// MVC            
 
-            //services.AddTransient<ApplecationDbContext>();
-            // services.AddSingleton<ApplecationDbContext>();
+            ///services.AddTransient<ApplecationDbContext>();
+            /// services.AddSingleton<ApplecationDbContext>();
 
 
-            //services.AddScoped<ApplecationDbContext>();
-            //services.AddScoped<DbContextOptions<ApplecationDbContext>>();
+            ///services.AddScoped<ApplecationDbContext>();
+            ///services.AddScoped<DbContextOptions<ApplecationDbContext>>();
             services.AddDbContext<ApplecationDbContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            } , ServiceLifetime.Scoped);
 
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
-
+            services.AppApplicationServices(); // Extention Method
 
         }
 
