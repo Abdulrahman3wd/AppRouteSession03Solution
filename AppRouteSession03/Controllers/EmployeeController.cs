@@ -15,14 +15,19 @@ namespace AppRouteSession03.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _env;
         //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IMapper mapper, IEmployeeRepository employeeRepository, IWebHostEnvironment env  /*IDepartmentRepository departmentRepository*/)
+        public EmployeeController(
+            IMapper mapper,
+            IUnitOfWork unitOfWork,
+            //IEmployeeRepository employeeRepository,
+            IWebHostEnvironment env 
+            /*IDepartmentRepository departmentRepository*/)
         {
-            _mapper = mapper;
-            _employeeRepository = employeeRepository;
+            _mapper = mapper;     
+            _unitOfWork = unitOfWork;
             _env = env;
             //_departmentRepository = departmentRepository;
         }
@@ -47,11 +52,11 @@ namespace AppRouteSession03.PL.Controllers
 
 
             if (string.IsNullOrEmpty(searchInp))
-                employees = _employeeRepository.GetAll();
+                employees = _unitOfWork.EmployeeRepository.GetAll();
                
          
             else
-                employees = _employeeRepository.SearchEmployeesByname(searchInp.ToLower());
+                employees = _unitOfWork.EmployeeRepository.SearchEmployeesByname(searchInp.ToLower());
             var MappedEpm = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
             return View(MappedEpm);
@@ -71,11 +76,14 @@ namespace AppRouteSession03.PL.Controllers
             if (ModelState.IsValid)
             {
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                var Count = _employeeRepository.Add(MappedEmp);
+                _unitOfWork.EmployeeRepository.Add(MappedEmp);
+
+                // Update Depatmrnt 
+                // _unitofwork.DepartmentRepository.Update(departmrnt)
 
                 // 3. TempData is Dictinory Type Property (Introduced in ASP.NET Framework 3.5)
                 //           => is used to pass data between two consecutive Requestes
-
+                var Count = _unitOfWork.Complete();
                 if (Count > 0)
                     TempData["Message"] = "Employee is Created Successfuly";
 
@@ -96,7 +104,7 @@ namespace AppRouteSession03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();  //400       
 
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
             var MappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
             if (employee is null)
                 return NotFound(); //404
@@ -124,7 +132,8 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                _employeeRepository.Update(MappedEmp);
+                _unitOfWork.EmployeeRepository.Update(MappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
 
@@ -148,8 +157,8 @@ namespace AppRouteSession03.PL.Controllers
         {
             try
             {
-                var MappedDept = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                _employeeRepository.Delete(MappedDept);
+                _unitOfWork.EmployeeRepository.Delete(_mapper.Map<EmployeeViewModel, Employee>(employeeVm));
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
 

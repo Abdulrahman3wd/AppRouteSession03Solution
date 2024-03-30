@@ -11,11 +11,11 @@ namespace AppRouteSession03.BLL.Interfaces
     {
         IEnumerable<T> GetAll();
         T Get(int id);
-        int Add(T Employee);
+        void Add(T Employee);
 
-        int Update(T Employee);
+        void Update(T Employee);
 
-        int Delete(T entity);
+        void Delete(T entity);
 
     }
 }

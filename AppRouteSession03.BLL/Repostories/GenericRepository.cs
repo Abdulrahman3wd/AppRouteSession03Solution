@@ -22,34 +22,30 @@ namespace AppRouteSession03.BLL.Repostories
 
 
 
-        public int Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
+        public void Add(T entity)        
+          =>  _dbContext.Set<T>().Add(entity);
           //  _dbContext.Update(entity); // EF Core 3.1 New Feture 
-            return _dbContext.SaveChanges();
-        }
-        public int Update(T entity)
-        {
-            _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
+          
+        public void Update(T entity)
+           => _dbContext.Set<T>().Update(entity);
+      
 
-        }
+        
 
-        public int Delete(T entity)
-        {
-            _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
+        public void Delete(T entity)       
+          =>  _dbContext.Set<T>().Remove(entity);
+           
 
-        }
+        
 
         public T Get(int id)
         {
             //var department = _dbContext.Departments.Local .Where(D=>D.Id == id).FirstOrDefault();
             //return department;
-            return _dbContext.Set<T>().Find(id); // EF Core 3.1 Feature
+            return _dbContext.Find<T>(id); // EF Core 3.1 Feature
         }
 
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             if (typeof(T) == typeof(Employee))
                 return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();

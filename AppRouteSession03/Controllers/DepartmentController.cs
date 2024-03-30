@@ -17,17 +17,21 @@ namespace AppRouteSession03.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         // Inheritance : DepartmentController is a Controller 
         // Composition : DepartmentController has a Department Repository  
-
-        private readonly IDepartmentRepository _departmentRepo; // Null
+        //private readonly IDepartmentRepository _departmentRepo; // Null
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IMapper mapper, IDepartmentRepository departmentRepository , IWebHostEnvironment env) // Ask CLR for Creating an object from Class Implementing IDepartmentRepository
+        public DepartmentController(
+            IMapper mapper,
+            IUnitOfWork unitOfWork,
+            //IDepartmentRepository departmentRepository ,
+            IWebHostEnvironment env) // Ask CLR for Creating an object from Class Implementing IDepartmentRepository
         {
             _mapper = mapper;
-            _departmentRepo = departmentRepository;
+            _unitOfWork = unitOfWork;
             _env = env;
         }
 
@@ -40,11 +44,11 @@ namespace AppRouteSession03.PL.Controllers
         
 
             if (string.IsNullOrEmpty(searchInp))
-                departments = _departmentRepo.GetAll();
+                departments = _unitOfWork.DepartmentRepository.GetAll();
 
 
             else
-                departments = _departmentRepo.SearchDepartmentByname(searchInp.ToLower());
+                departments = _unitOfWork.DepartmentRepository.SearchDepartmentByname(searchInp.ToLower());
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
 
             return View(MappedDept);
@@ -60,6 +64,7 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(DepartmentViewModel departmentVm)
         {
             if (ModelState.IsValid) // Server Side Validation
@@ -74,7 +79,8 @@ namespace AppRouteSession03.PL.Controllers
 
                 //2. Auto Mapper
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-              var Count =  _departmentRepo.Add(MappedDept);
+                _unitOfWork.DepartmentRepository.Add(MappedDept);
+                var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     TempData["Message"] = "Department is Created Successfuly";
@@ -93,7 +99,7 @@ namespace AppRouteSession03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();  //400       
             
-            var department = _departmentRepo.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             var MappedDept = _mapper.Map<Department, DepartmentViewModel>(department);
             if ( department is null)
                 return NotFound(); //404
@@ -129,7 +135,7 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _departmentRepo.Update(MappedDept);
+                _unitOfWork.DepartmentRepository.Update(MappedDept);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -156,7 +162,7 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _departmentRepo.Delete(MappedDept);
+                _unitOfWork.DepartmentRepository.Delete(MappedDept);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

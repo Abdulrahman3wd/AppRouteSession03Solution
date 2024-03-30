@@ -14,6 +14,7 @@ using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.PL.Extentions;
 using AppRouteSession03.PL.Helpers;
+using AppRouteSession03.BLL;
 namespace AppRouteSession03
 {
     public class Startup
@@ -30,8 +31,8 @@ namespace AppRouteSession03
         {
             services.AddControllersWithViews();
 
-
-
+ 
+ 
             ///services.AddControllers();// API
             ///services.AddRazorPages();// RazorPages
             ///services.AddMvc();// MVC            
@@ -48,7 +49,7 @@ namespace AppRouteSession03
 
             services.AppApplicationServices(); // Extention Method
             services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
