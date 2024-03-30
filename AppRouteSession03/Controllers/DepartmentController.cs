@@ -38,17 +38,17 @@ namespace AppRouteSession03.PL.Controllers
         // / Department/Index
         public IActionResult Index(string searchInp)
         {
-
+            TempData.Keep();
 
             var departments =Enumerable.Empty<Department>();
-        
 
+            var DepartmentRepo = _unitOfWork.Repository<Department>() as DepartmentRepository;
             if (string.IsNullOrEmpty(searchInp))
-                departments = _unitOfWork.DepartmentRepository.GetAll();
+                departments = DepartmentRepo.GetAll();
 
 
             else
-                departments = _unitOfWork.DepartmentRepository.SearchDepartmentByname(searchInp.ToLower());
+                departments = DepartmentRepo.SearchDepartmentByname(searchInp.ToLower());
             var MappedDept = _mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
 
             return View(MappedDept);
@@ -79,7 +79,7 @@ namespace AppRouteSession03.PL.Controllers
 
                 //2. Auto Mapper
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _unitOfWork.DepartmentRepository.Add(MappedDept);
+                _unitOfWork.Repository<Department>().Add(MappedDept);
                 var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
@@ -99,7 +99,7 @@ namespace AppRouteSession03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();  //400       
             
-            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = _unitOfWork.Repository<Department>().Get(id.Value);
             var MappedDept = _mapper.Map<Department, DepartmentViewModel>(department);
             if ( department is null)
                 return NotFound(); //404
@@ -135,7 +135,7 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _unitOfWork.DepartmentRepository.Update(MappedDept);
+                _unitOfWork.Repository<Department>().Update(MappedDept);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -159,10 +159,11 @@ namespace AppRouteSession03.PL.Controllers
         [HttpPost]
         public IActionResult Delete(DepartmentViewModel departmentVm)
         {
+            var DepartmentRepo = _unitOfWork.Repository<Department>() as DepartmentRepository;
             try
             {
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
-                _unitOfWork.DepartmentRepository.Delete(MappedDept);
+                DepartmentRepo.Delete(MappedDept);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

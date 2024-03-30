@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppRouteSession03.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace AppRouteSession03.BLL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IEmployeeRepository EmployeeRepository { get; set; }
-        public IDepartmentRepository DepartmentRepository { get; set; }
+        IGenericRepository<T> Repository<T>() where T : ModelBase; 
+
 
         int Complete();
     }

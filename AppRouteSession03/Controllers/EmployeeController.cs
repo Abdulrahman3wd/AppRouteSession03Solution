@@ -1,5 +1,6 @@
 ﻿using App.DAL.Models;
 using AppRouteSession03.BLL.Interfaces;
+using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.DAL.Models;
 using AppRouteSession03.PL.ViewModels;
 using AutoMapper;
@@ -49,14 +50,15 @@ namespace AppRouteSession03.PL.Controllers
             ///     => It Helps Us To Trasnsfer The Data Feom Controller[Action] to view  
             ///ViewBag.Message = "Hello View Bag";
             var employees =Enumerable.Empty<Employee>();
+            var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
 
 
             if (string.IsNullOrEmpty(searchInp))
-                employees = _unitOfWork.EmployeeRepository.GetAll();
+                employees = employeeRepo.GetAll();
                
          
             else
-                employees = _unitOfWork.EmployeeRepository.SearchEmployeesByname(searchInp.ToLower());
+                employees = employeeRepo.SearchEmployeesByname(searchInp.ToLower());
             var MappedEpm = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
             return View(MappedEpm);
@@ -73,10 +75,11 @@ namespace AppRouteSession03.PL.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeViewModel employeeVm)
         {
+
             if (ModelState.IsValid)
             {
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                _unitOfWork.EmployeeRepository.Add(MappedEmp);
+                _unitOfWork.Repository<Employee>().Add(MappedEmp);
 
                 // Update Depatmrnt 
                 // _unitofwork.DepartmentRepository.Update(departmrnt)
@@ -104,7 +107,7 @@ namespace AppRouteSession03.PL.Controllers
             if (!id.HasValue)
                 return BadRequest();  //400       
 
-            var employee = _unitOfWork.EmployeeRepository.Get(id.Value);
+            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
             var MappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
             if (employee is null)
                 return NotFound(); //404
@@ -122,6 +125,7 @@ namespace AppRouteSession03.PL.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVm)
         {
+    
             if (id != employeeVm.Id)
             {
                 return BadRequest("An Error :(");
@@ -132,7 +136,7 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
-                _unitOfWork.EmployeeRepository.Update(MappedEmp);
+                _unitOfWork.Repository<Employee>().Update(MappedEmp);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
@@ -155,9 +159,10 @@ namespace AppRouteSession03.PL.Controllers
         [HttpPost]
         public IActionResult Delete(EmployeeViewModel employeeVm)
         {
+            var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             try
             {
-                _unitOfWork.EmployeeRepository.Delete(_mapper.Map<EmployeeViewModel, Employee>(employeeVm));
+                employeeRepo.Delete(_mapper.Map<EmployeeViewModel, Employee>(employeeVm));
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
