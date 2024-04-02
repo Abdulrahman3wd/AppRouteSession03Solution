@@ -31,6 +31,7 @@
     <table class="table table-striped table-hover mt-4">
         <thead> 
             <tr> 
+                <th>Image</th>
                 <th>@Html.DisplayNameFor(E=>E.Name)</th>
                 <th>@Html.DisplayNameFor(E => E.Email)</th>
                 <th>@Html.DisplayNameFor(E => E.Address)</th>
@@ -48,6 +49,9 @@
             @foreach(var employee in Model)
             {
                 <tr>
+                    <td>
+                            <img src="~/Files/images/@employee.ImageName" alt="Employee Image" width="100%" />
+                    </td>
                     <td>@employee.Name</td>
                     <td>@Html.DisplayFor(M=> employee.Email)</td>
                     <td>@employee.Address</td>
