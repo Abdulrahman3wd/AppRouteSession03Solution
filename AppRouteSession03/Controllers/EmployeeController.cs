@@ -169,8 +169,14 @@ namespace AppRouteSession03.PL.Controllers
             try
             {
                 employeeRepo.Delete(_mapper.Map<EmployeeViewModel, Employee>(employeeVm));
-                _unitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                var Count = _unitOfWork.Complete();
+                if( Count > 0)
+                {
+                    DocumentSetting.DeleteFile(employeeVm.ImageName, "images");
+                    return RedirectToAction(nameof(Index));
+
+                }
+                return View(employeeVm);
 
 
             }
