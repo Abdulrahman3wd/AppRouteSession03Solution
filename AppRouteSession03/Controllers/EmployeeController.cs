@@ -2,6 +2,7 @@
 using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.BLL.Repostories;
 using AppRouteSession03.DAL.Models;
+using AppRouteSession03.PL.Helpers;
 using AppRouteSession03.PL.ViewModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace AppRouteSession03.PL.Controllers
 {
@@ -78,6 +80,8 @@ namespace AppRouteSession03.PL.Controllers
 
             if (ModelState.IsValid)
             {
+               employeeVm.ImageName =  DocumentSetting.UploadFile(employeeVm.Image, "images");
+
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
                 _unitOfWork.Repository<Employee>().Add(MappedEmp);
 
@@ -88,7 +92,9 @@ namespace AppRouteSession03.PL.Controllers
                 //           => is used to pass data between two consecutive Requestes
                 var Count = _unitOfWork.Complete();
                 if (Count > 0)
+                {
                     TempData["Message"] = "Employee is Created Successfuly";
+                }
 
                 else
                     TempData["Message"] = "An Error !! Has Occured, Employee Not Craeted ";

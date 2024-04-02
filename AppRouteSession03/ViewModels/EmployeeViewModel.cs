@@ -2,6 +2,7 @@
 using AppRouteSession03.DAL.Models;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace AppRouteSession03.PL.ViewModels
 {
@@ -38,6 +39,8 @@ namespace AppRouteSession03.PL.ViewModels
         #endregion
 
         public int? DepartmentId { get; set; } // ForignKey Column
+        public IFormFile Image { get; set; }
+        public string ImageName { get; set; }
 
 
         // Navigational Property [One] [Related Data]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
-
+ 
 namespace AppRouteSession03.PL.Helpers
 {
     public static class DocumentSetting
@@ -30,8 +30,6 @@ namespace AppRouteSession03.PL.Helpers
             return fileName;
             
         }
-
-
         public static void DeleteFile(string fileName , string folderName)
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\files", folderName);

@@ -53,6 +53,7 @@ namespace AppRouteSession03.DAL.Models
         public bool IsDeleted { get; set; } = false;
         #endregion
 
+        public string ImageName { get; set; }
         public int? DepartmentId { get; set; } // ForignKey Column
 
         
