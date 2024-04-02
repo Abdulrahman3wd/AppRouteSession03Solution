@@ -9,9 +9,9 @@ namespace AppRouteSession03.BLL.Interfaces
 {
     public interface IGenericRepository<T> where T : ModelBase
     {
-        IEnumerable<T> GetAll();
-        T Get(int id);
-        void Add(T Employee);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
+        void   Add(T Employee);
 
         void Update(T Employee);
 

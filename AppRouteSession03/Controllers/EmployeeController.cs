@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Threading.Tasks;
 
 namespace AppRouteSession03.PL.Controllers
 {
@@ -39,7 +40,7 @@ namespace AppRouteSession03.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Index(string searchInp)
+        public async Task <IActionResult> Index(string searchInp)
         {
             /// Binding Through View`s Dictionary :  Transfer Data from Action to view
             ///
@@ -56,7 +57,7 @@ namespace AppRouteSession03.PL.Controllers
 
 
             if (string.IsNullOrEmpty(searchInp))
-                employees = employeeRepo.GetAll();
+                employees = await employeeRepo.GetAllAsync();
                
          
             else
@@ -75,12 +76,12 @@ namespace AppRouteSession03.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EmployeeViewModel employeeVm)
+        public async Task< IActionResult>Create(EmployeeViewModel employeeVm)
         {
 
             if (ModelState.IsValid)
             {
-               employeeVm.ImageName =  DocumentSetting.UploadFile(employeeVm.Image, "images");
+               employeeVm.ImageName = await DocumentSetting.UploadFile(employeeVm.Image, "images");
 
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
                 _unitOfWork.Repository<Employee>().Add(MappedEmp);
@@ -90,7 +91,7 @@ namespace AppRouteSession03.PL.Controllers
 
                 // 3. TempData is Dictinory Type Property (Introduced in ASP.NET Framework 3.5)
                 //           => is used to pass data between two consecutive Requestes
-                var Count = _unitOfWork.Complete();
+                var Count = await _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     TempData["Message"] = "Employee is Created Successfuly";
@@ -108,12 +109,12 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task< IActionResult> Details(int? id, string viewName = "Details")
         {
             if (!id.HasValue)
                 return BadRequest();  //400       
 
-            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
+            var employee = await _unitOfWork.Repository<Employee>().GetAsync(id.Value);
             var MappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
             if (employee is null)
                 return NotFound(); //404
@@ -121,15 +122,15 @@ namespace AppRouteSession03.PL.Controllers
             return View(viewName, MappedEmp);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task< IActionResult> Edit(int? id)
         {
         
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVm)
+        public async Task< IActionResult> Edit([FromRoute] int id, EmployeeViewModel employeeVm)
         {
     
             if (id != employeeVm.Id)
@@ -143,7 +144,7 @@ namespace AppRouteSession03.PL.Controllers
             {
                 var MappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVm);
                 _unitOfWork.Repository<Employee>().Update(MappedEmp);
-                _unitOfWork.Complete();
+               await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
 
 
@@ -163,13 +164,13 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(EmployeeViewModel employeeVm)
+        public async Task<IActionResult> Delete(EmployeeViewModel employeeVm)
         {
             var employeeRepo = _unitOfWork.Repository<Employee>() as EmployeeRepository;
             try
             {
                 employeeRepo.Delete(_mapper.Map<EmployeeViewModel, Employee>(employeeVm));
-                var Count = _unitOfWork.Complete();
+                var Count = await _unitOfWork.Complete();
                 if( Count > 0)
                 {
                     DocumentSetting.DeleteFile(employeeVm.ImageName, "images");

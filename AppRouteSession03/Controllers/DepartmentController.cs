@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AppRouteSession03.PL.Controllers
 {
@@ -36,7 +37,7 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         // / Department/Index
-        public IActionResult Index(string searchInp)
+        public async Task<IActionResult> Index(string searchInp)
         {
             TempData.Keep();
 
@@ -44,7 +45,7 @@ namespace AppRouteSession03.PL.Controllers
 
             var DepartmentRepo = _unitOfWork.Repository<Department>() as DepartmentRepository;
             if (string.IsNullOrEmpty(searchInp))
-                departments = DepartmentRepo.GetAll();
+                departments = await DepartmentRepo.GetAllAsync();
 
 
             else
@@ -65,7 +66,7 @@ namespace AppRouteSession03.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(DepartmentViewModel departmentVm)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVm)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -80,7 +81,7 @@ namespace AppRouteSession03.PL.Controllers
                 //2. Auto Mapper
                 var MappedDept = _mapper.Map<DepartmentViewModel, Department>(departmentVm);
                 _unitOfWork.Repository<Department>().Add(MappedDept);
-                var Count = _unitOfWork.Complete();
+                var Count = await _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     TempData["Message"] = "Department is Created Successfuly";
@@ -94,12 +95,12 @@ namespace AppRouteSession03.PL.Controllers
             return View(departmentVm);
         }
 
-        public IActionResult Details(int? id, string viewName ="Details")
+        public async Task<IActionResult> Details(int? id, string viewName ="Details")
         {
             if (!id.HasValue)
                 return BadRequest();  //400       
             
-            var department = _unitOfWork.Repository<Department>().Get(id.Value);
+            var department = await _unitOfWork.Repository<Department>().GetAsync(id.Value);
             var MappedDept = _mapper.Map<Department, DepartmentViewModel>(department);
             if ( department is null)
                 return NotFound(); //404
@@ -108,7 +109,7 @@ namespace AppRouteSession03.PL.Controllers
         }
 
         // /Department/Edit/10
-        public IActionResult Edit(int? id) 
+        public async Task<IActionResult> Edit(int? id) 
         {
             ///if (!id.HasValue)
             ///   return BadRequest(); //400
@@ -116,7 +117,7 @@ namespace AppRouteSession03.PL.Controllers
             ///if ( department is null)
             ///    return NotFound();//404
             ///return View(department);
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
         }
 
         [HttpPost]
@@ -183,12 +184,6 @@ namespace AppRouteSession03.PL.Controllers
 
         }
 
-        [HttpGet]
-
-        public IActionResult Delete(int? id) 
-        {
-            return Details(id);
-
-        }
+        
     }
 }

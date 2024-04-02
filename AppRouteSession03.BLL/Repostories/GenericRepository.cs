@@ -22,8 +22,8 @@ namespace AppRouteSession03.BLL.Repostories
 
 
 
-        public void Add(T entity)        
-          =>  _dbContext.Set<T>().Add(entity);
+        public  void Add(T entity)        
+          => _dbContext.Set<T>().Add(entity);
           //  _dbContext.Update(entity); // EF Core 3.1 New Feture 
           
         public void Update(T entity)
@@ -38,19 +38,19 @@ namespace AppRouteSession03.BLL.Repostories
 
         
 
-        public T Get(int id)
+        public async Task<T> GetAsync(int id)
         {
             //var department = _dbContext.Departments.Local .Where(D=>D.Id == id).FirstOrDefault();
             //return department;
-            return _dbContext.Find<T>(id); // EF Core 3.1 Feature
+            return await _dbContext.FindAsync<T>(id); // EF Core 3.1 Feature
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual async Task<IEnumerable<T>>  GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
-                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+                return (IEnumerable<T>) await _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToListAsync();
             else
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+                return await _dbContext.Set<T>().AsNoTracking().ToListAsync();
 
 
         }

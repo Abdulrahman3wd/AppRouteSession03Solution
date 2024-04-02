@@ -49,13 +49,13 @@ namespace AppRouteSession03.BLL
             }
             return _repositories[Key] as IGenericRepository<T>;
         }
-        public int Complete()
+        public async Task<int> Complete()
         {
-            return _dbContext.SaveChanges();
+            return await _dbContext.SaveChangesAsync();
         }
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            _dbContext.Dispose(); // Close Connection
+          await _dbContext.DisposeAsync(); // Close Connection
         }
 
 

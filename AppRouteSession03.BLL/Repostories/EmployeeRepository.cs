@@ -27,8 +27,8 @@ namespace AppRouteSession03.BLL.Repostories
             return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
         }
 
-        public IQueryable<Employee> SearchEmployeesByname(string name)
-        => _dbContext.Employees.Where(E => E.Name.ToLower().Contains(name));
+        public   IQueryable<Employee> SearchEmployeesByname(string name)
+        =>  _dbContext.Employees.Where(E => E.Name.ToLower().Contains(name));
             
         
     }

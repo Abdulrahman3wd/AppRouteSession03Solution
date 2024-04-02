@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
- 
+using System.Threading.Tasks;
+
 namespace AppRouteSession03.PL.Helpers
 {
     public static class DocumentSetting
     {
-        public static string UploadFile(IFormFile file , string folderName)
+        public static async Task<string> UploadFile(IFormFile file , string folderName)
         {
             // 1. get located folder path 
             //string folderPath = $"C:\\Users\\Jet\\Desktop\\mvc\\AppRouteSession03Solution\\AppRouteSession03\\wwwroot\\Files\\{folderName}";
@@ -25,7 +26,7 @@ namespace AppRouteSession03.PL.Helpers
             // 4. save file as Streams [Data per Time]
             var fileStream = new FileStream(filePath, FileMode.Create);
 
-            file.CopyTo(fileStream);
+           await file.CopyToAsync(fileStream);
 
             return fileName;
             
