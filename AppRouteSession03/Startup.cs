@@ -15,6 +15,8 @@ using AppRouteSession03.BLL.Interfaces;
 using AppRouteSession03.PL.Extentions;
 using AppRouteSession03.PL.Helpers;
 using AppRouteSession03.BLL;
+using AppRouteSession03.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 namespace AppRouteSession03
 {
     public class Startup
@@ -50,6 +52,27 @@ namespace AppRouteSession03
             services.AppApplicationServices(); // Extention Method
             services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredUniqueChars = 2;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredLength = 5;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.User.RequireUniqueEmail = true;
+
+            }).AddEntityFrameworkStores<ApplecationDbContext>(); 
+           
+
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

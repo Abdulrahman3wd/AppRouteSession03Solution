@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AppRouteSession03.PL
 {
-    public class ApplecationDbContext : IdentityDbContext
+    public class ApplecationDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public ApplecationDbContext(DbContextOptions<ApplecationDbContext> options) : base(options)
