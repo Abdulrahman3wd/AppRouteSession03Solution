@@ -1,5 +1,6 @@
-﻿using AppRouteSession03.DAL.Models;
-using AppRouteSession03.PL.ViewModels.User;
+﻿using AppRouteSession03.Controllers;
+using AppRouteSession03.DAL.Models;
+using AppRouteSession03.PL.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -65,6 +66,32 @@ namespace AppRouteSession03.PL.Controllers
         {
             return View();
 
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignIn (SignInViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    var flag = await _userManager.CheckPasswordAsync(user, model.Password);
+                    if (flag)
+                    {
+                        var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+						if (result.IsLockedOut)
+							ModelState.AddModelError(string.Empty, "Your Account Is Loked");
+						if (result.Succeeded)
+                            return RedirectToAction(nameof(HomeController.Index) , "Home");
+                        if (result.IsNotAllowed)
+                            ModelState.AddModelError(string.Empty, "Your Account Is Not Comfirmed Yet !!");
+
+
+					}
+                    ModelState.AddModelError(string.Empty, "Invalid Login");
+                }
+            }
+            return View(model);
         }
 
         #endregion

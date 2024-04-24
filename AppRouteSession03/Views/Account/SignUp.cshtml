@@ -24,8 +24,11 @@
 			</div>
 			<input type="submit" value="SIGNUP">
 		</form>
-		<p>Don't have an Account? <a asp-action="SignIn"> Login Now!</a></p>
+		<p>have an Account? <a asp-action="SignIn"> Login Now!</a></p>
 	</div>
 </div>
+@section ValidationScriptsSection {
+	<partial name="_ValidationScriptsPartial" />
+}
 
 

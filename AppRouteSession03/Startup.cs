@@ -68,9 +68,11 @@ namespace AppRouteSession03
 
                 options.User.RequireUniqueEmail = true;
 
-            }).AddEntityFrameworkStores<ApplecationDbContext>(); 
-           
+            })
+                .AddEntityFrameworkStores<ApplecationDbContext>();
+                //.AddDefaultTokenProviders();
 
+            // services.AddAuthentication();
 
             
         }
