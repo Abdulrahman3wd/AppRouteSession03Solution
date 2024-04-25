@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppRouteSession01.BLL
+namespace AppRouteSession03.DAL.Models
 {
-    internal class Class1
+    public abstract class ModelBase
     {
+        public int Id { get; set; }
     }
 }

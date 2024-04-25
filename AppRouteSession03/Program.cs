@@ -13,7 +13,10 @@ namespace AppRouteSession03
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var hostBuilder = CreateHostBuilder(args).Build();
+            //Data Seeding
+            //Apply Migration
+            hostBuilder.Run(); // Applecation is ready for Requests
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -1,4 +1,4 @@
-﻿using AppRouteSession03.Models;
+﻿using AppRouteSession03.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

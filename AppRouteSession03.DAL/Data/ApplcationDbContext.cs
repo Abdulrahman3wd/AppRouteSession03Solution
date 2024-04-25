@@ -7,10 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using App.DAL.Models;
+using AppRouteSession03.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AppRouteSession03.PL
 {
-    public class ApplecationDbContext : DbContext
+    public class ApplecationDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public ApplecationDbContext(DbContextOptions<ApplecationDbContext> options) : base(options)
@@ -19,10 +22,14 @@ namespace AppRouteSession03.PL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<IdentityRole>().ToTable("Rols");
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+
     }
 
 }

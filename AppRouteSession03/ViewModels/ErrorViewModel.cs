@@ -1,6 +1,6 @@
 using System;
 
-namespace AppRouteSession03.Models
+namespace AppRouteSession03.ViewModels
 {
     public class ErrorViewModel
     {

@@ -10,6 +10,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AppRouteSession03.BLL.Repostories;
+using AppRouteSession03.BLL.Interfaces;
+using AppRouteSession03.PL.Extentions;
+using AppRouteSession03.PL.Helpers;
+using AppRouteSession03.BLL;
+using AppRouteSession03.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 namespace AppRouteSession03
 {
     public class Startup
@@ -26,26 +33,48 @@ namespace AppRouteSession03
         {
             services.AddControllersWithViews();
 
+ 
+ 
+            ///services.AddControllers();// API
+            ///services.AddRazorPages();// RazorPages
+            ///services.AddMvc();// MVC            
+
+            ///services.AddTransient<ApplecationDbContext>();
+            /// services.AddSingleton<ApplecationDbContext>();
 
 
-            //services.AddControllers();// API
-            //services.AddRazorPages();// RazorPages
-            //services.AddMvc();// MVC            
-
-            //services.AddTransient<ApplecationDbContext>();
-            // services.AddSingleton<ApplecationDbContext>();
-
-
-            //services.AddScoped<ApplecationDbContext>();
-            //services.AddScoped<DbContextOptions<ApplecationDbContext>>();
+            ///services.AddScoped<ApplecationDbContext>();
+            ///services.AddScoped<DbContextOptions<ApplecationDbContext>>();
             services.AddDbContext<ApplecationDbContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            } , ServiceLifetime.Scoped);
 
+            services.AppApplicationServices(); // Extention Method
+            services.AddAutoMapper(M=>M.AddProfile(new MappingProfiles()));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredUniqueChars = 2;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredLength = 5;
 
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 
+                options.User.RequireUniqueEmail = true;
 
+            })
+                .AddEntityFrameworkStores<ApplecationDbContext>();
+                //.AddDefaultTokenProviders();
+
+            // services.AddAuthentication();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +95,6 @@ namespace AppRouteSession03
 
             app.UseRouting();
 
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

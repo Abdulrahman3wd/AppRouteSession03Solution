@@ -69,3 +69,27 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.fade-in-out {
+    opacity: 0;
+    animation: fade-in 1s ease-in forwards, fade-out 4s 2s ease-out forwards;
+}
+
+
+
+
+@keyframes fade-in {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
